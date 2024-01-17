@@ -6,7 +6,8 @@
 		</Screen>
 		<Bg>
 			<BgImg bgImg="images/dungeon.png"></BgImg>
-			<BgMusic bgMusic=""></BgMusic>
+			<BgMusic bgMusic="sounds/dark.wav"></BgMusic>
+			<FireSound fireSound="sounds/gun.wav"></FireSound>
 		</Bg>
 		<GameMode>
 			<BlockMode blockMode="infinite"></BlockMode>

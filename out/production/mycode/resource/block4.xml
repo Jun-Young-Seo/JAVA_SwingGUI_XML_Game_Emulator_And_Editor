@@ -6,7 +6,8 @@
 		</Screen>
 		<Bg>
 			<BgImg bgImg="images/sky.jpg"></BgImg>
-			<BgMusic bgMusic =""></BgMusic>
+			<BgMusic bgMusic ="sounds/bird.wav"></BgMusic>
+			<FireSound fireSound="sounds/gun.wav"></FireSound>
 		</Bg>
 		<GameMode>
 			<BlockMode blockMode="limit"></BlockMode>

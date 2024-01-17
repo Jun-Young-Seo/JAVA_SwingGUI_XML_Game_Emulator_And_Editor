@@ -2,8 +2,10 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 
+import javax.sound.sampled.*;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,7 +24,8 @@ public class BlockGameFrame extends JFrame {
     private String bulletBlockDirection;
     private String blockMode;
     private ImageIcon bgImg;
-    private String bgMusic;
+    private File bgMusic;
+    private File fireSound;
     BlockGameFrame() {
         new BlockGameMenuBar(this);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -48,7 +51,10 @@ public class BlockGameFrame extends JFrame {
                 bgImg = new ImageIcon(XMLReader.getAttr(node,"bgImg"));
             }
             if(node.getNodeName().equals(XMLReader.E_BGMUSIC)){
-                continue;
+                bgMusic = new File(XMLReader.getAttr(node,"bgMusic"));
+            }
+            if(node.getNodeName().equals(XMLReader.E_FIRESOUND)){
+                fireSound = new File(XMLReader.getAttr(node,"fireSound"));
             }
         }
         NodeList gameModeList = gameMode.getChildNodes();
@@ -76,7 +82,7 @@ public class BlockGameFrame extends JFrame {
         w = Integer.parseInt(XMLReader.getAttr(sizeNode, "w"));
         h = Integer.parseInt(XMLReader.getAttr(sizeNode, "h"));
         setSize(w,h);
-        GamePanel gamePanel = new GamePanel(xml.getGamePanelElement(),bgImg,bgMusic,w,h,shotMode,blockDirection,bulletBlockDirection,blockMode);
+        GamePanel gamePanel = new GamePanel(xml.getGamePanelElement(),bgImg,bgMusic,fireSound,w,h,shotMode,blockDirection,bulletBlockDirection,blockMode);
         setContentPane(gamePanel);
         setResizable(false);
         //System.out.println("bd: "+blockDirection);
@@ -365,6 +371,7 @@ class GamePanel extends JPanel {
     int howManyBlocksNow=0;
     private String blockMode;
     private MainGameThread mainGameThread;
+    private File bgMusic;
 
     int[] fontStyles = {
             Font.PLAIN,  // 기본 스타일
@@ -390,11 +397,12 @@ class GamePanel extends JPanel {
     private Vector<Block> infiniteBlocks = new Vector<>(10);
     private BulletBlock b;
     private String lastDirection="left";
-    private String bgMusic;
-    public GamePanel(Node gamePanelNode,ImageIcon bgImg, String bgMusic, int frameW, int frameH, String shotMode, String blockDirection, String bulletBlockDirection, String blockMode) {
+    private File fireSound;
+    public GamePanel(Node gamePanelNode, ImageIcon bgImg, File bgMusic, File fireSound, int frameW, int frameH, String shotMode, String blockDirection, String bulletBlockDirection, String blockMode) {
         //System.out.println("gamePanel: "+blockMode);
         setLayout(null);
         this.bgImg=bgImg;
+        this.fireSound = fireSound;
         this.bgMusic=bgMusic;
         this.gamePanelNode=gamePanelNode;
         this.bulletBlockDirection=bulletBlockDirection;
@@ -484,7 +492,9 @@ class GamePanel extends JPanel {
                 int bulletDistance = Integer.parseInt(XMLReader.getAttr(node,"bulletdistance"));
                 int fireTimeMs = Integer.parseInt(XMLReader.getAttr(node,"firetimems"));
                 ImageIcon bulletIcon = new ImageIcon(XMLReader.getAttr(node,"bulletimg"));
-                b = new BulletBlock(frameW, frameH, blockW, blockH, blockX, blockY, bulletW, bulletH, bulletDistance, fireTimeMs, bulletBlockIcon, bulletIcon, this, bulletBlockDirection);
+                b = new BulletBlock(frameW, frameH, blockW, blockH, blockX, blockY, bulletW, bulletH,
+                        bulletDistance, fireTimeMs, bulletBlockIcon, bulletIcon, this, bulletBlockDirection
+                ,fireSound);
                // System.out.println(bulletBlockDirection);
                 bulletBlockLabel = b.getBulletBlock();
                 bulletBlockLabel.setFocusable(true);
@@ -506,7 +516,7 @@ class GamePanel extends JPanel {
                 forup = new ImageIcon(XMLReader.getAttr(node,"blockimgforup"));
                 fordown = new ImageIcon(XMLReader.getAttr(node,"blockimgfordown"));
                 b = new BulletBlock(frameW, frameH, blockW, blockH, blockX, blockY, bulletW, bulletH, bulletDistance, fireTimeMs, bulletIcon, this, bulletBlockDirection
-                ,forleft,forright,forup,fordown);
+                ,forleft,forright,forup,fordown,fireSound);
               //  System.out.println(bulletBlockDirection);
                 bulletBlockLabel = b.getBulletBlock();
                 bulletBlockLabel.setFocusable(true);
@@ -523,7 +533,7 @@ class GamePanel extends JPanel {
                 this.addKeyListener(new BulletBlockKeyAdapterforManual(bulletBlockDirection));
             }
 
-            MainGameThread mainGameThread = new MainGameThread(this);
+            MainGameThread mainGameThread = new MainGameThread(this,bgMusic);
             mainGameThread.start();
     }
     public void addSpecialBlocks(){
@@ -757,11 +767,21 @@ class GamePanel extends JPanel {
     class MainGameThread extends Thread{
         private int randRange;
         private GamePanel gamePanel;
-
-        public MainGameThread(GamePanel gamePanel) {
+        private Clip clip;
+        private File audioFile;
+        public MainGameThread(GamePanel gamePanel, File audioFile) {
             this.gamePanel=gamePanel;
+            this.audioFile= audioFile;
+            try {
+                clip = AudioSystem.getClip();
+                //System.out.println("Music Start");
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+                clip.open(audioStream);
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+            } catch (LineUnavailableException e) {e.printStackTrace();}
+            catch (IOException e){e.printStackTrace();}
+            catch (UnsupportedAudioFileException e){e.printStackTrace();}
         }
-
         @Override
         public void run(){
             while(true) {

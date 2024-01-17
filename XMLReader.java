@@ -33,6 +33,7 @@ public class XMLReader {
     private Document XMLDoc;
 
     // All element names except elements for components
+    static public String E_FIRESOUND = "FireSound";
     static public String E_BLOCKMODE = "BlockMode";
     static public String E_SETTING= "Setting";
     static public String E_CHASEMODEBULLETBLOCK = "ChaseModeBulletBlock";

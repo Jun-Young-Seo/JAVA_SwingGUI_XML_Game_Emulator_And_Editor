@@ -1,7 +1,10 @@
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -20,15 +23,19 @@ class BulletBlock extends JLabel {
     private Vector<JLabel> bulletVector = new Vector<>(10);
     private long lastFireTime = 0; // 마지막 발사 시간을 기록
     private final long fireDelay = 500; // 최소 발사 간격
-
+    private Clip clip;
+    private File fireSound;
     public JLabel getBulletBlock() {
         return bulletBlock;
     }
-    public BulletBlock(int frameW, int frameH, int blockW, int blockH,int blockX, int blockY, int bulletW, int bulletDistance,int bulletH, int fireTimeMs,ImageIcon bulletBlockIcon, ImageIcon bulletIcon, GamePanel gamePanel,String bulletBlockDirection) {
+    public BulletBlock(int frameW, int frameH, int blockW, int blockH,int blockX, int blockY, int bulletW, int bulletDistance,
+                       int bulletH, int fireTimeMs,ImageIcon bulletBlockIcon, ImageIcon bulletIcon,
+                       GamePanel gamePanel,String bulletBlockDirection, File fireSound) {
         this.frameW = frameW; this.blockW=blockW; this.blockH=blockH; this.bulletW=bulletW; this.bulletH=bulletH;
         this.fireTimeMs = fireTimeMs; this.bulletDistance= bulletDistance; this.bulletBlockDirection=bulletBlockDirection;
         this.frameH = frameH; this.blockX=blockX; this.blockY=blockY;
         this.gamePanel = gamePanel;
+        this.fireSound=fireSound;
         Image scaledImage = bulletBlockIcon.getImage().getScaledInstance(blockW, blockH, Image.SCALE_SMOOTH);
         ImageIcon scaledImg = new ImageIcon(scaledImage);
         Image bulletScaledImage = bulletIcon.getImage().getScaledInstance(bulletW,bulletH,Image.SCALE_SMOOTH);
@@ -37,15 +44,18 @@ class BulletBlock extends JLabel {
         bulletBlock.setIcon(scaledImg);
         bulletBlock.setSize(blockW, blockH);
         bulletBlock.setLocation(blockX,blockY);
+        getFireSound();
     }
 
     public BulletBlock(int frameW, int frameH, int blockW, int blockH,int blockX, int blockY, int bulletW,
-                       int bulletDistance,int bulletH, int fireTimeMs,ImageIcon bulletIcon, GamePanel gamePanel,String bulletBlockDirection
-    ,ImageIcon forLeft, ImageIcon forRight, ImageIcon forUp, ImageIcon forDown) {
+                       int bulletDistance,int bulletH, int fireTimeMs,ImageIcon bulletIcon,
+                       GamePanel gamePanel,String bulletBlockDirection
+    ,ImageIcon forLeft, ImageIcon forRight, ImageIcon forUp, ImageIcon forDown, File fireSound) {
         this.frameW = frameW; this.blockW=blockW; this.blockH=blockH; this.bulletW=bulletW; this.bulletH=bulletH;
         this.fireTimeMs = fireTimeMs; this.bulletDistance= bulletDistance; this.bulletBlockDirection=bulletBlockDirection;
         this.frameH = frameH; this.blockX=blockX; this.blockY=blockY;
         this.gamePanel = gamePanel;
+        this.fireSound=fireSound;
         Image scaledImageforLeft =forLeft.getImage().getScaledInstance(blockW, blockH, Image.SCALE_SMOOTH);
         scaledImgforLeft = new ImageIcon(scaledImageforLeft);
         Image scaledImageforRight =forRight.getImage().getScaledInstance(blockW, blockH, Image.SCALE_SMOOTH);
@@ -61,12 +71,25 @@ class BulletBlock extends JLabel {
         bulletBlock.setSize(blockW, blockH);
         bulletBlock.setLocation(blockX,blockY);
         System.out.println("in bullt block direction:"+bulletBlockDirection);
+        getFireSound();
+    }
+    public void getFireSound(){
+        try {
+            clip = AudioSystem.getClip();
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(fireSound);
+            clip.open(audioStream);
+        }
+        catch(LineUnavailableException e){e.printStackTrace();}
+        catch(IOException e){e.printStackTrace();}
+        catch (UnsupportedAudioFileException e){e.printStackTrace();}
     }
     public void shotAuto(){
         BulletBlockThreadForAuto bulletBlockThreadForAuto = new BulletBlockThreadForAuto();
         bulletBlockThreadForAuto.start();
     }
     public void shotSpace(){
+        clip.setFramePosition(0);
+        clip.start();
         if(spaceFirstFlag) {
             bulletThreadForManual = new BulletThreadForManual();
             bulletThreadForManual.start();
@@ -76,6 +99,7 @@ class BulletBlock extends JLabel {
         else{
             bulletThreadForManual.addBullet();
         }
+
     }
     //스페이스 키로 발사되는 총알 스레드
     class BulletThreadForManual extends Thread {
@@ -175,13 +199,16 @@ class BulletBlock extends JLabel {
                 public void run(){
                     try{
                         while(true){
+                            //clip.start와 setFramePosition을 활용하면 소리가 총알마다 나게 할 수는 있는데
+                            //총알 연사 속도가 너무 빨라서 소리가 깨지는 문제
+                            clip.loop(Clip.LOOP_CONTINUOUSLY);
                             bullet.setLocation(bullet.getX()+dx*bulletDistance,bullet.getY()+dy*bulletDistance);
                             if(bullet.getX()<0 || bullet.getX()>frameW ||bullet.getY()<0 || bullet.getY()>frameH){
                                 gamePanel.remove(bullet);
                                 gamePanel.repaint();
                                 this.interrupt();
                             }
-                            sleep(10);
+                            sleep(100);
                         }
                     } catch (InterruptedException e) {
                         //System.out.println("interrupted");
@@ -195,6 +222,7 @@ class BulletBlock extends JLabel {
         public void run() {
             if(bulletBlockDirection.equals("cross")) {
                 while (true) {
+                    clip.loop(Clip.LOOP_CONTINUOUSLY);
                     JLabel bulletLabel = new JLabel();
                     bulletLabel.setName("Bullet");
                     bulletLabel.setLocation(bulletBlock.getX(), bulletBlock.getY());
@@ -221,6 +249,7 @@ class BulletBlock extends JLabel {
             }
             else if(bulletBlockDirection.equals("updown")){
                 while (true) {
+                    clip.loop(Clip.LOOP_CONTINUOUSLY);
                     JLabel bulletLabel = new JLabel();
                     bulletLabel.setName("Bullet");
                     bulletLabel.setLocation(bulletBlock.getX(), bulletBlock.getY());
@@ -249,6 +278,7 @@ class BulletBlock extends JLabel {
             else if(bulletBlockDirection.equals("fourway")){
                 try{
                 while(true) {
+                    clip.loop(Clip.LOOP_CONTINUOUSLY);
                     String direction = gamePanel.getLastDirection();
                     switch(direction){
                         case "left":
