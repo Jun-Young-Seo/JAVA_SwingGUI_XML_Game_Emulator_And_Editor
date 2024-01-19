@@ -48,6 +48,12 @@
 		<!-- BlockDirection : cross, down, random, chase  cross: 파괴해야할 블록 좌 에서 우로 down : 파괴해야할 블록이 위에서 아래로 random : 블록이 랜덤하게 움직임 chase : block이 player를 추적-->
 		<!-- BulletBlockDirection : cross,updown, fourway cross: 총알 발사되는 블록 좌우로 updown : 총알 발사되는 블록 위아래로 fourway : 상하좌우 네 방향으로 총알 발사-->
 
+		<!-- Setting  -->
+		<!-- Screen : 화면 크기 설정. 사용자 재설정 불가  -->
+		<!-- Bgimg : 게임 기본 배경화면  -->
+		<!-- BgMusic : 게임 전체 배경음악  -->
+		<!-- FireSound : 총알 발사 소리  -->
+
 		<!-- Score  -->
 		<!-- Rule : 객체 파괴시 올라갈 점수 -->
 		<!-- ScoreBlock : 스코어 표기 칸 생성 x,y는 위치, w,h는 크기 scorecontent는 숫자 앞에 적힐 문장-->

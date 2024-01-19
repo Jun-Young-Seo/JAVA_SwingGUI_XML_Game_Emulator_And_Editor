@@ -43,9 +43,16 @@
 </GamePanel>
 </BlockGame>
 		<!-- GameMode  -->
+		<!-- BlockMode : limit, infinite  limit : 현재 블록이 다 잡혀야 새로 생성, infinite : 항상 현재 블록 갯수 유지  -->
 		<!-- ShotMode : auto, manual  auto : 총알 자동발사 manual : 스페이스키로 발사  -->
 		<!-- BlockDirection : cross, down, random, chase  cross: 파괴해야할 블록 좌 에서 우로 down : 파괴해야할 블록이 위에서 아래로 random : 블록이 랜덤하게 움직임 chase : block이 player를 추적-->
 		<!-- BulletBlockDirection : cross,updown, fourway cross: 총알 발사되는 블록 좌우로 updown : 총알 발사되는 블록 위아래로 fourway : 상하좌우 네 방향으로 총알 발사-->
+
+		<!-- Setting  -->
+		<!-- Screen : 화면 크기 설정. 사용자 재설정 불가  -->
+		<!-- Bgimg : 게임 기본 배경화면  -->
+		<!-- BgMusic : 게임 전체 배경음악  -->
+		<!-- FireSound : 총알 발사 소리  -->
 
 		<!-- Score  -->
 		<!-- Rule : 객체 파괴시 올라갈 점수 -->
@@ -53,7 +60,8 @@
 
 		<!-- Player : 총알이 발사되는 블록에 대한 설정 -->
 		<!-- BulletBlock 태그일 때는 크기, 위치, 이미지와 총알의 크기, 이미지만 설정-->
-		<!-- firems : 총알이 발사되는 속도 -->
+		<!-- firems : 총알이 발사되는 속도(연사 속도) -->
+		<!-- distance : 총알이 발사되는 거리 -->
 		<!-- ChaseBulletBlock 태그일 때는 blockDirection이 chase일 때 사용 : 네 방향 이미지 등록 필요 -->
 
 		<!-- Stage  -->
@@ -61,6 +69,7 @@
 		<!-- StageBlock : 스테이지를 표기하는 블럭에 대한 속성 Score와 동일  -->
 
 		<!-- Obj 태그의 life는 파괴에 필요한 타격 횟수, speed는 움직이는 속도 -->
+		<!-- x,y에만 "random" 값을 넣을 수 있고, 0~화면최대크기 까지 랜덤한 좌표 x,y에 블록 등장 -->
 		<!-- Special은 특수 기능을 가진 블록, rate는 등장확률 0으로 설정하면 등장안함  -->
 		<!-- randScope는 blockdirection이 랜덤일 때 한번에 움직이는 거리 값 0으로 설정하면 다른 모드에서도 작성해도 에러 안남   -->
 
@@ -85,3 +94,4 @@
 		<!-- 10. Red (빨간색) -->
 		<!-- 11. White (하얀색) -->
 		<!-- 12. Yellow (노란색) -->
+
