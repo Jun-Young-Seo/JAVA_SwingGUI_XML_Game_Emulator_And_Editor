@@ -18,8 +18,8 @@ public class MainAuthorFrame extends JFrame {
         hSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         hSplitPane.setDividerLocation(1500); // Divider 위치 설정
         contentPane.add(hSplitPane);
-        arrangePanel = new ArrangePanel();
-        itemPanel = new ItemPanel();
+        arrangePanel = new ArrangePanel(itemPanel);
+        itemPanel = new ItemPanel(arrangePanel);
         hSplitPane.setLeftComponent(arrangePanel);
         hSplitPane.setRightComponent(itemPanel);
     }
