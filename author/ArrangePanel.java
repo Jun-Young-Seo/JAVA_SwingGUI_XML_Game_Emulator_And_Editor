@@ -1,25 +1,29 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.StringTokenizer;
-import java.util.Vector;
 
 public class ArrangePanel extends JPanel {
     private ArrangeTabPanel arrangeTabPanel;
     private XMLTabPanel xmlTabPanel;
+    private MainAuthorFrame mainAuthorFrame;
+    private PropertyPane propertyPane;
     private ItemPanel itemPanel;
-    Vector<ItemPanel.Block> items = new Vector<>(10);
-    public ArrangePanel(ItemPanel itemPanel) {
-        this.itemPanel = itemPanel;
+    JTabbedPane arrangePanelPane;
+    public ArrangePanel(MainAuthorFrame mainAuthorFrame) {
+        this.mainAuthorFrame=mainAuthorFrame;
         setLayout(new BorderLayout());
-        JTabbedPane arrangePanelPane = new JTabbedPane();
-        arrangeTabPanel = new ArrangeTabPanel(itemPanel);
+        arrangePanelPane = new JTabbedPane();
         xmlTabPanel = new XMLTabPanel();
 
-        arrangePanelPane.addTab("작업 중", arrangeTabPanel);
-        arrangePanelPane.addTab("XML", xmlTabPanel);
-
         add(arrangePanelPane, BorderLayout.CENTER);
-
+    }
+    public void init(){
+        propertyPane=itemPanel.getPropertyPane();
+        arrangeTabPanel = new ArrangeTabPanel(mainAuthorFrame,propertyPane);
+        arrangePanelPane.addTab("작업 중", arrangeTabPanel);
+        arrangePanelPane.addTab("XML",xmlTabPanel);
+    }
+    public void setItemPanel(ItemPanel itemPanel){
+        this.itemPanel=itemPanel;
     }
     public ArrangeTabPanel getArrangeTabPanel(){
         return arrangeTabPanel;
@@ -28,24 +32,38 @@ public class ArrangePanel extends JPanel {
 
     //사용자가 아이템을 붙이는 탭팬
     class ArrangeTabPanel extends JPanel{
-        ItemPanel itemPanel;
-        Vector<ItemPanel.Block> items;
+        private Image userBgImage;
+        JLabel arrangeBlockLabel;
+        MainAuthorFrame mainAuthorFrame;
+        PropertyPane propertyPane;
+        public ArrangeTabPanel(MainAuthorFrame mainAuthorFrame,PropertyPane propertyPane){
+            setLayout(null);
+            this.propertyPane=propertyPane;
+            this.mainAuthorFrame=mainAuthorFrame;
+            userBgImage = null;
+        }
+        public void setUserBgImage(Image userBgImage){
+            this.userBgImage=userBgImage;
+        }
+        public void setBlock(int [] blockSource, String imgFilePath, String shotImgFilePath) {
 
-        public ArrangeTabPanel(ItemPanel itemPanel) {
-            this.itemPanel = itemPanel;
-            items = new Vector<>(10);
+            int x = blockSource[0]; int y = blockSource[1]; int w= blockSource[2]; int h =blockSource[3];
+            int randscope = blockSource[4]; int life = blockSource[5]; int speed = blockSource[6];
+
+            Block arrangeBlock = new Block(x,y,w,h,randscope,life,speed,imgFilePath,shotImgFilePath,mainAuthorFrame,propertyPane);
+
+            mainAuthorFrame.arrangeBlocks.add(arrangeBlock);
+            arrangeBlockLabel = arrangeBlock.getBlockLabel();
+            add(arrangeBlockLabel);
+            repaint();
         }
-        public void setBlock(String input){
-            StringTokenizer stk = new StringTokenizer(input,",");
-            while(stk.hasMoreTokens()){
-                int x = Integer.parseInt(stk.nextToken());
-                int y = Integer.parseInt(stk.nextToken());
-                int w = Integer.parseInt(stk.nextToken());
-                int h = Integer.parseInt(stk.nextToken());
-                System.out.println(stk.nextToken());
-            }
+        @Override
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.drawImage(userBgImage,0,0,this.getWidth(),this.getHeight(),null);
         }
-    }
+}
+
 
     class XMLTabPanel extends JPanel{
         public XMLTabPanel(){
