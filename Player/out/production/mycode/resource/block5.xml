@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="euc-kr" ?>
+<BlockGame>
+	<Setting>
+		<Screen>
+			<Size w="1920" h="1080"></Size>
+		</Screen>
+		<Bg>
+			<BgImg bgImg="images/dungeon.png"></BgImg>
+			<BgMusic bgMusic="sounds/dark.wav"></BgMusic>
+			<FireSound fireSound="sounds/gun.wav"></FireSound>
+		</Bg>
+		<GameMode>
+			<BlockMode blockMode="infinite"></BlockMode>
+			<ShotMode shotMode="auto"></ShotMode>
+			<BlockDirection blockDirection="chase"></BlockDirection>
+			<BulletBlockDirection bulletBlockDirection="fourway"></BulletBlockDirection>
+		</GameMode>
+	</Setting>
+	<GamePanel>
+		<Player>
+			<ChaseModeBulletBlock blockw="30" blockh="30" blockx="512" blocky="384" bulletw="30" bulleth="50" firetimems="50" bulletimg ="images/bullet.png" bulletdistance="30"
+						 blockimgforleft="images/left.png" blockimgforright="images/right.png" blockimgforup="images/up.png" blockimgfordown="images/down.png"></ChaseModeBulletBlock>
+		</Player>
+		<Stage>
+			<PlusSpeed plusSpeed="10"></PlusSpeed>
+			<StageBlock stageblockx="500" stageblocky="100" stageblockw="300" stageblockh="30" stagecontent="Stage : "
+						stagefontname="고딕체" stagefontstyle="1" stagefontsize="30" stagefontcolor="10"></StageBlock>
+		</Stage>
+		<Score>
+			<Rule rule="100"></Rule>
+			<ScoreBlock scoreblockx="500" scoreblocky="200" scoreblockw="300" scoreblockh="30" scorecontent="점수 : "
+						scorefontname="고딕체" scorefontstyle="1" scorefontsize="30" scorefontcolor="10"></ScoreBlock>
+		</Score>
+		<Block>
+			<Obj x="random" y="random" w="100" h="100" randscope="100" life="1" speed="10" img="images/monster1.png" shotimg="images/shot.png"></Obj>
+			<Obj  x="random" y="random" w="100" h="100"  randscope="100" life="2" speed="60" img="images/monster1.png" shotimg="images/shot.png"/>
+			<Obj  x="random" y="random" w="100" h="100"  randscope="100" life="3" speed="5" img="images/monster2.png" shotimg="images/shot.png"/>
+			<Obj x="random" y="random" w="100" h="100" randscope="100" life="4" speed="10" img="images/monster3.png" shotimg="images/shot.png"></Obj>
+			<Obj  x="random" y="random" w="100" h="100"  randscope="100" life="5" speed="1" img="images/monster4.png" shotimg="images/shot.png"/>
+			<Obj  x="random" y="random" w="100" h="100"  randscope="100" life="6" speed="3" img="images/monster3.png" shotimg="images/shot.png"/>
+			<Special x="random" y="random" w="100" h="100" rate="0" randscope="100" life="6" speed="30" img="images/bomb.png" shotimg="images/bombshot.png"></Special>
+		</Block>
+	</GamePanel>
+</BlockGame>
+		<!-- GameMode  -->
+		<!-- BlockMode : limit, infinite  limit : 현재 블록이 다 잡혀야 새로 생성, infinite : 항상 현재 블록 갯수 유지  -->
+		<!-- ShotMode : auto, manual  auto : 총알 자동발사 manual : 스페이스키로 발사  -->
+		<!-- BlockDirection : cross, down, random, chase  cross: 파괴해야할 블록 좌 에서 우로 down : 파괴해야할 블록이 위에서 아래로 random : 블록이 랜덤하게 움직임 chase : block이 player를 추적-->
+		<!-- BulletBlockDirection : cross,updown, fourway cross: 총알 발사되는 블록 좌우로 updown : 총알 발사되는 블록 위아래로 fourway : 상하좌우 네 방향으로 총알 발사-->
+
+		<!-- Setting  -->
+		<!-- Screen : 화면 크기 설정. 사용자 재설정 불가  -->
+		<!-- Bgimg : 게임 기본 배경화면  -->
+		<!-- BgMusic : 게임 전체 배경음악  -->
+		<!-- FireSound : 총알 발사 소리  -->
+
+		<!-- Score  -->
+		<!-- Rule : 객체 파괴시 올라갈 점수 -->
+		<!-- ScoreBlock : 스코어 표기 칸 생성 x,y는 위치, w,h는 크기 scorecontent는 숫자 앞에 적힐 문장-->
+
+		<!-- Player : 총알이 발사되는 블록에 대한 설정 -->
+		<!-- BulletBlock 태그일 때는 크기, 위치, 이미지와 총알의 크기, 이미지만 설정-->
+		<!-- firems : 총알이 발사되는 속도(연사 속도) -->
+		<!-- distance : 총알이 발사되는 거리 -->
+		<!-- ChaseBulletBlock 태그일 때는 blockDirection이 chase일 때 사용 : 네 방향 이미지 등록 필요 -->
+
+		<!-- Stage  -->
+		<!-- PlusSpeed : 스테이지가 증가할 때 얼마나 빨라질지에 대한 정도  -->
+		<!-- StageBlock : 스테이지를 표기하는 블럭에 대한 속성 Score와 동일  -->
+
+		<!-- Obj 태그의 life는 파괴에 필요한 타격 횟수, speed는 움직이는 속도 -->
+		<!-- x,y에만 "random" 값을 넣을 수 있고, 0~화면최대크기 까지 랜덤한 좌표 x,y에 블록 등장 -->
+		<!-- Special은 특수 기능을 가진 블록, rate는 등장확률 0으로 설정하면 등장안함  -->
+		<!-- randScope는 blockdirection이 랜덤일 때 한번에 움직이는 거리 값 0으로 설정하면 다른 모드에서도 작성해도 에러 안남   -->
+
+
+		<!-- Score, Stage 블록 설정에 대한 폰트와 색상 int 값 -->
+		<!-- Font Styles -->
+		<!-- 0. Plain (기본 스타일) -->
+		<!-- 1. Bold (굵은 스타일) -->
+		<!-- 2. Italic (이탤릭 스타일) -->
+
+		<!-- Colors -->
+		<!-- 0. Black (검은색) -->
+		<!-- 1. Blue (파란색) -->
+		<!-- 2. Cyan (청록색) -->
+		<!-- 3. Dark Gray (진회색) -->
+		<!-- 4. Gray (회색) -->
+		<!-- 5. Green (녹색) -->
+		<!-- 6. Light Gray (밝은 회색) -->
+		<!-- 7. Magenta (자홍색) -->
+		<!-- 8. Orange (주황색) -->
+		<!-- 9. Pink (분홍색) -->
+		<!-- 10. Red (빨간색) -->
+		<!-- 11. White (하얀색) -->
+		<!-- 12. Yellow (노란색) -->
