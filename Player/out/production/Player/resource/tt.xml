@@ -1,0 +1,38 @@
+<BlockGame>
+<Setting>
+<Screen>
+<Size w="1000" h="1000"/>
+</Screen>
+<Bg>
+<BgImg bgImg="C:\Users\서준영\Desktop\HSU\과제\3-1\project_java\mycode\Editor\images\sky.jpg"/>
+<BgMusic bgMusic="C:\Users\서준영\Desktop\HSU\과제\3-1\project_java\mycode\Editor\sounds\dark.wav"/>
+<FireSound fireSound="C:\Users\서준영\Desktop\HSU\과제\3-1\project_java\mycode\Editor\sounds\gun.wav"/>
+</Bg>
+<GameMode>
+<BlockMode blockMode="limit"/>
+<ShotMode shotMode="auto"/>
+<BlockDirection blockDirection="down"/>
+<BulletBlockDirection bulletBlockDirection="cross"/>
+</GameMode>
+</Setting>
+<GamePanel>
+<Player>
+<BulletBlock blockw="100" blockh="100" blockx="638" blocky="795" bulletw="20" bulleth="50" firetimems="10" bulletdistance="10" blockimg="./images/enemy2.png" bulletimg="./images/enemy2.png"/>
+</Player>
+<Stage>
+<PlusSpeed plusSpeed="10"/>
+<StageBlock stageblockx="500" stageblocky="100" stageblockw="300" stageblockh="30" stagecontent="Stage : " stagefontname="고딕체" stagefontstyle="1" stagefontsize="30" stagefontcolor="10"/>
+</Stage>
+<Score>
+<Rule rule="10"/>
+<ScoreBlock scoreblockx="500" scoreblocky="500" scoreblockw="100" scoreblockh="100" scorecontent="점수:" scorefontname="고딕체" scorefontstyle="1" scorefontsize="15" scorefontcolor="10"/>
+</Score>
+<Block>
+<Obj x="605" y="51" w="100" h="100" randscope="10" life="10" speed="10" img="./images/block.png" shotimg="./images/block.png"/>
+<Obj x="373" y="62" w="100" h="100" randscope="10" life="10" speed="10" img="./images/block.png" shotimg="./images/block.png"/>
+<Obj x="1076" y="70" w="100" h="100" randscope="10" life="10" speed="10" img="./images/block.png" shotimg="./images/block.png"/>
+<Obj x="852" y="74" w="100" h="100" randscope="10" life="10" speed="10" img="./images/block.png" shotimg="./images/block.png"/>
+<Obj x="114" y="62" w="100" h="100" randscope="10" life="10" speed="10" img="./images/block.png" shotimg="./images/block.png"/>
+</Block>
+</GamePanel>
+</BlockGame>

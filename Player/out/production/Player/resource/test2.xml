@@ -25,7 +25,7 @@
 </Stage>
 <Score>
 <Rule rule="10"/>
-<ScoreBlock scoreblockx="200" scoreblocky="200" scoreblockw="100" scoreblockh="100" scorecontent="점수" scorefontname="고딕체" scorefontstyle="30" scorefontsize="1" scorefontcolor="1"/>
+<ScoreBlock scoreblockx="200" scoreblocky="200" scoreblockw="100" scoreblockh="100" scorecontent="점수" scorefontname="고딕체" scorefontstyle="1" scorefontsize="1" scorefontcolor="1"/>
 </Score>
 <Block>
 <Obj x="300" y="300" w="100" h="100" randscope="10" life="10" speed="10" img="C:\Users\서준영\Desktop\HSU\과제\3-1\project_java\mycode\Editor\images\enemy2.png" shotimg="C:\Users\서준영\Desktop\HSU\과제\3-1\project_java\mycode\Editor\images\bomb.png"/>

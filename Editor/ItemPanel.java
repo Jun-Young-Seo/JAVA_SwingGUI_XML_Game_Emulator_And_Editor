@@ -430,17 +430,23 @@ public class ItemPanel extends JPanel {
                     //block
                     blockCombo.setSize(100,30);
                     blockCombo.setLocation(30,410);
+                    blockCombo.setSelectedIndex(0);
                     blockDirectionCombo.setSize(100,30);
                     blockDirectionCombo.setLocation(300,410);
                     //player
                     playerBlockDirectionCombo.setSize(100,30);
                     playerBlockDirectionCombo.setLocation(30,750);
+                    playerBlockDirectionCombo.setSelectedIndex(0);
                     shotCombo.setSize(100,30);
                     shotCombo.setLocation(300,750);
                     add(playerBlockDirectionCombo);
                     add(shotCombo);
                     add(blockCombo);
                     add(blockDirectionCombo);
+                    blockMode = blockModes[0]; // "limit"
+                    shotMode = shotModes[0]; // "auto"
+                    blockDirection = blockDirections[0]; // "cross"
+                    playerBlockDirection = playerBlockDirections[0]; // "cross"
                     playerBlockDirectionCombo.addActionListener(comboBoxActionListener);
                     shotCombo.addActionListener(comboBoxActionListener);
                     blockCombo.addActionListener(comboBoxActionListener);
@@ -532,6 +538,7 @@ public class ItemPanel extends JPanel {
                         mainAuthorFrame.settings.add(bgMusicFilePath);
                         mainAuthorFrame.settings.add(playerSoundFilePath);
                         mainAuthorFrame.settings.add(scoreX);
+                        //10
                         mainAuthorFrame.settings.add(scoreY);
                         mainAuthorFrame.settings.add(scoreW);
                         mainAuthorFrame.settings.add(scoreH);
@@ -550,36 +557,38 @@ public class ItemPanel extends JPanel {
                     }
                 }
                 class bgBtnActionListener implements ActionListener{
-                    JFileChooser chooser;
+                    JFileChooser chooseForImage;
+                    JFileChooser chooserForSound;
                     @Override
                     public void actionPerformed(ActionEvent e){
                         JButton btn = (JButton)e.getSource();
-                        chooser = new JFileChooser("./images");
+                        chooseForImage = new JFileChooser("./images");
+                        chooserForSound = new JFileChooser("./sounds");
                         FileNameExtensionFilter filterForImage = new FileNameExtensionFilter("JPG & PNG & GIF Images"
                                 , "jpg", "png", "gif");
-                        FileNameExtensionFilter filterForSound = new FileNameExtensionFilter("wav Files","jpg","png");
+                        FileNameExtensionFilter filterForSound = new FileNameExtensionFilter("wav Files","wav");
 
                         //bgimg
                         if(btn==buttons[0]){
-                            chooser.setFileFilter(filterForImage);
-                            int result = chooser.showOpenDialog(null);
+                            chooseForImage.setFileFilter(filterForImage);
+                            int result = chooseForImage.showOpenDialog(null);
                             if (result != JFileChooser.APPROVE_OPTION) return;
-                            bgImgFilePath = chooser.getSelectedFile().getPath();
+                            bgImgFilePath = chooseForImage.getSelectedFile().getPath();
                             settingPane.setBgImgFilePath(bgImgFilePath);
                         }
                         //bgmusic
                         else if(btn ==buttons[1]){
-                            chooser.setFileFilter(filterForSound);
-                            int result = chooser.showOpenDialog(null);
+                            chooserForSound.setFileFilter(filterForSound);
+                            int result = chooserForSound.showOpenDialog(null);
                             if (result != JFileChooser.APPROVE_OPTION) return;
-                            bgMusicFilePath = chooser.getSelectedFile().getPath();
+                            bgMusicFilePath = chooserForSound.getSelectedFile().getPath();
                         }
                         //playersound
                         else if (btn ==buttons[2]){
-                            chooser.setFileFilter(filterForSound);
-                            int result = chooser.showOpenDialog(null);
+                            chooserForSound.setFileFilter(filterForSound);
+                            int result = chooserForSound.showOpenDialog(null);
                             if (result != JFileChooser.APPROVE_OPTION) return;
-                            playerSoundFilePath = chooser.getSelectedFile().getPath();
+                            playerSoundFilePath = chooserForSound.getSelectedFile().getPath();
                         }
                     }
                     public String getBgImgFilePath(){
@@ -587,14 +596,23 @@ public class ItemPanel extends JPanel {
                     }
                 }
                 class scoreDialog extends JDialog{
+                    private String [] scoreFontNames = {"궁서체","고딕체","명조체"};
+                    private String [] scoreFontStyles = {"0","1","2"};
+                    private String [] scoreFontColors = {"0","1","2","3","4","5","6","7","8","9","10","11","12"};
+                    private JComboBox fontNameCombo= new JComboBox(scoreFontNames);
+                    private JComboBox fontStyleCombo = new JComboBox(scoreFontStyles);
+                    private JComboBox fontColorCombo = new JComboBox(scoreFontColors);
                     private JButton scoreDialogBtn=new JButton("저장");
                     public scoreDialog(){
                         setLayout(null);
                         setSize(500,1000);
                         setResizable(false);
-                        scoreFields = new JTextField[9];
-                        attrs = new JLabel[]{scoreXLabel,scoreYLabel,scoreWLabel,scoreHLabel,scoreContentLabel,scoreFontNameLabel,
-                        scoreFontStyleLabel,scoreFontSizeLabel,scoreFontColorLabel};
+                        scoreFields = new JTextField[6];
+                        //6,7,9
+                        //6 : name
+                        //7 : style
+                        //9 : color
+                        attrs = new JLabel[]{scoreXLabel,scoreYLabel,scoreWLabel,scoreHLabel,scoreContentLabel,scoreFontSizeLabel};
                         for(int i=0;i<attrs.length;i++) {
                             attrs[i].setSize(300, 30);
                             attrs[i].setFont(new Font("고딕체", Font.BOLD, 20));
@@ -605,6 +623,26 @@ public class ItemPanel extends JPanel {
                             scoreFields[i].setLocation(80,55+100*i);
                             add(scoreFields[i]);
                         }
+                        scoreFontNameLabel.setSize(300,30);
+                        scoreFontNameLabel.setFont(new Font("고딕체",Font.BOLD,20));
+                        scoreFontNameLabel.setLocation(170,605);
+                        scoreFontStyleLabel.setSize(300,30);
+                        scoreFontStyleLabel.setFont(new Font("고딕체",Font.BOLD,20));
+                        scoreFontStyleLabel.setLocation(170,705);
+                        scoreFontColorLabel.setSize(300,30);
+                        scoreFontColorLabel.setFont(new Font("고딕체",Font.BOLD,20));
+                        scoreFontColorLabel.setLocation(170,805);
+                        add(scoreFontNameLabel); add(scoreFontStyleLabel); add(scoreFontColorLabel);
+                        fontNameCombo.setSize(300,30);
+                        fontNameCombo.setLocation(80,655);
+                        fontNameCombo.setSelectedIndex(0);
+                        fontStyleCombo.setSize(300,30);
+                        fontStyleCombo.setLocation(80,755);
+                        fontStyleCombo.setSelectedIndex(0);
+                        fontColorCombo.setSize(300,30);
+                        fontColorCombo.setLocation(80,855);
+                        fontColorCombo.setSelectedIndex(10);
+                        add(fontNameCombo); add(fontStyleCombo); add(fontColorCombo);
                         scoreDialogBtn.setSize(100,30);
                         scoreDialogBtn.setLocation(170,900);
                         scoreDialogBtn.addActionListener(new ActionListener() {
@@ -615,10 +653,10 @@ public class ItemPanel extends JPanel {
                                 scoreW=scoreFields[2].getText();
                                 scoreH=scoreFields[3].getText();
                                 scoreContent=scoreFields[4].getText();
-                                scoreFontName=scoreFields[5].getText();
-                                scoreFontStyle=scoreFields[6].getText();
-                                scoreFontSize=scoreFields[7].getText();
-                                scoreFontColor=scoreFields[8].getText();
+                                scoreFontSize=scoreFields[5].getText();
+                                scoreFontName= (String) fontNameCombo.getSelectedItem();
+                                scoreFontStyle = (String)fontStyleCombo.getSelectedItem();
+                                scoreFontColor = (String)fontColorCombo.getSelectedItem();
                                 setVisible(false);
                             }
                         });

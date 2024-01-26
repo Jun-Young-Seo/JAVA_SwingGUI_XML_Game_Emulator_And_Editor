@@ -1,5 +1,9 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ArrangePanel extends JPanel {
     private ArrangeTabPanel arrangeTabPanel;
@@ -12,8 +16,18 @@ public class ArrangePanel extends JPanel {
         this.mainAuthorFrame=mainAuthorFrame;
         setLayout(new BorderLayout());
         arrangePanelPane = new JTabbedPane();
-        xmlTabPanel = new XMLTabPanel();
-
+        xmlTabPanel = new XMLTabPanel(mainAuthorFrame);
+        arrangePanelPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JTabbedPane tabPane = (JTabbedPane) e.getSource();
+                int selectedIndex = tabPane.getSelectedIndex();
+                if (selectedIndex == 1) { // XML 탭이 선택되었을 때
+                    System.out.println("XML 탭 선택됨");
+                    xmlTabPanel.writeXml(); // XML 내용 작성 메소드 호출
+                }
+            }
+        });
         add(arrangePanelPane, BorderLayout.CENTER);
     }
     public void init(){
@@ -78,8 +92,26 @@ public class ArrangePanel extends JPanel {
 
 
     class XMLTabPanel extends JPanel{
-        public XMLTabPanel(){
-            setBackground(Color.YELLOW);
+        private MainAuthorFrame mainAuthorFrame;
+        private String content;
+        private JTextArea xmlContent;
+        public XMLTabPanel(MainAuthorFrame mainAuthorFrame){
+            this.mainAuthorFrame=mainAuthorFrame;
+            setLayout(new BorderLayout());
+            xmlContent = new JTextArea();
+            xmlContent.setFont(new Font("고딕체", Font.BOLD, 20));
+            JScrollPane scrollPane = new JScrollPane(xmlContent);
+            add(scrollPane, BorderLayout.CENTER);
         }
-    }
+        public void writeXml(){
+            try {
+                content = mainAuthorFrame.makeString();
+                xmlContent.setText(content);
+            }
+            catch(ArrayIndexOutOfBoundsException e){
+                JOptionPane.showMessageDialog(this, "내용이 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+}
 

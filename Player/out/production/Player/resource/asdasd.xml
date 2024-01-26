@@ -1,0 +1,39 @@
+<BlockGame>
+<Setting>
+<Screen>
+<Size w="1000" h="1000"/>
+</Screen>
+<Bg>
+<BgImg bgImg="C:\Users\서준영\Desktop\HSU\과제\3-1\project_java\mycode\Editor\images\sky.jpg"/>
+<BgMusic bgMusic="C:\Users\서준영\Desktop\HSU\과제\3-1\project_java\mycode\Editor\sounds\dark.wav"/>
+<FireSound fireSound="C:\Users\서준영\Desktop\HSU\과제\3-1\project_java\mycode\Editor\sounds\gun.wav"/>
+</Bg>
+<GameMode>
+<BlockMode blockMode="limit"/>
+<ShotMode shotMode="auto"/>
+<BlockDirection blockDirection="down"/>
+<BulletBlockDirection bulletBlockDirection="cross"/>
+</GameMode>
+</Setting>
+<GamePanel>
+<Player>
+<BulletBlock blockw="100" blockh="100" blockx="635" blocky="814" bulletw="1" bulleth="1" firetimems="1" bulletdistance="1" blockimg="C:\Users\서준영\Desktop\HSU\과제\3-1\project_java\mycode\Editor\images\jet.png" bulletimg="C:\Users\서준영\Desktop\HSU\과제\3-1\project_java\mycode\Editor\images\handler.png"/>
+</Player>
+<Stage>
+<PlusSpeed plusSpeed=""/>
+<StageBlock stageblockx="500" stageblocky="100" stageblockw="300" stageblockh="30" stagecontent="Stage : " stagefontname="고딕체" stagefontstyle="1" stagefontsize="30" stagefontcolor="10"/>
+</Stage>
+<Score>
+<Rule rule=""/>
+<ScoreBlock scoreblockx="100" scoreblocky="100" scoreblockw="100" scoreblockh="100" scorecontent="점수" scorefontname="고딕체" scorefontstyle="1" scorefontsize="15" scorefontcolor="10"/>
+</Score>
+<Block>
+<Obj x="657" y="78" w="100" h="100" randscope="10" life="10" speed="10" img="./images/block.png" shotimg="./images/block.png"/>
+<Obj x="852" y="114" w="100" h="100" randscope="10" life="10" speed="10" img="./images/block.png" shotimg="./images/block.png"/>
+<Obj x="498" y="153" w="100" h="100" randscope="10" life="10" speed="10" img="./images/block.png" shotimg="./images/block.png"/>
+<Obj x="288" y="80" w="100" h="100" randscope="10" life="10" speed="10" img="./images/block.png" shotimg="./images/block.png"/>
+<Obj x="66" y="54" w="100" h="100" randscope="10" life="10" speed="10" img="./images/block.png" shotimg="./images/block.png"/>
+<Obj x="1053" y="184" w="200" h="200" randscope="15" life="15" speed="15" img="C:\Users\서준영\Desktop\HSU\과제\3-1\project_java\mycode\Editor\images\enemy2.png" shotimg="C:\Users\서준영\Desktop\HSU\과제\3-1\project_java\mycode\Editor\images\bomb.png"/>
+</Block>
+</GamePanel>
+</BlockGame>

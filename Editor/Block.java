@@ -31,10 +31,10 @@ public class Block {
     private ImageIcon userNewBullet;
     private int [] blockSource; //x,y,w,h,randscope,life,speed
     private int [] defaultBlockSource = {100,100,100,100,10,10,10};
-    private String defaultImg = "./images/block.png";
-    private String defaultPlayerImg = "./images/enemy2.png";
-    private int [] playerSource; //x,y,w,h,Bw,Bh,fms,Bd
-    private int [] defaultPlayerSource = {500,500,100,100,20,50,10,10};
+    private String defaultImg = "C:\\Users\\서준영\\Desktop\\HSU\\과제\\3-1\\project_java\\mycode\\Editor\\images\\block.png";
+    private String defaultPlayerImg = "C:\\Users\\서준영\\Desktop\\HSU\\과제\\3-1\\project_java\\mycode\\Editor\\images\\enemy2.png";
+    private int [] playerSource; //w,h,x,y,Bw,Bh,fms,Bd
+    private int [] defaultPlayerSource = {100,100,500,500,20,50,10,10};
     private MainAuthorFrame mainAuthorFrame;
     private PropertyPane propertyPane;
     private String imgFilePath;
@@ -131,6 +131,18 @@ public class Block {
         blockLabel.setSize(w,h);
         blockLabel.setLocation(x,y);
         blockLabel.setIcon(userNewBlock);
+        arrangeTabPanel.repaint();
+    }
+    //w,h,x,y,Bw,Bh,fms,Bd
+    public void changePlayer(int [] playerSource,String playerImgFilePath,String bulletImgFilePath){
+        this.playerW = playerSource[0]; this.playerH = playerSource[1]; this.playerX= playerSource[2]; this.playerY =playerSource[3];
+        this.bulletW = playerSource[4]; this.bulletH = playerSource[5]; this.bulletDistance = playerSource[6];
+        this.playerImgFilePath=playerImgFilePath; this.bulletImgFilePath=bulletImgFilePath;
+        userNewPlayerBlock = makeImage(new ImageIcon(imgFilePath),playerW,playerH);
+        userNewBullet = makeImage(new ImageIcon(bulletImgFilePath),bulletW,bulletH);
+        blockLabel.setSize(playerW,playerH);
+        blockLabel.setLocation(playerX,playerY);
+        blockLabel.setIcon(userNewPlayerBlock);
         arrangeTabPanel.repaint();
     }
     public void makeHandler(){
@@ -465,7 +477,7 @@ public class Block {
             public BlockDialogForPlayer(){
                 setLayout(null);
                 setResizable(false);
-                attrs = new JLabel[]{xLabel,yLabel,wLabel,hLabel,bulletWLabel,bulletHLabel,fireTimeMsLabel, bulletDistanceLabel};
+                attrs = new JLabel[]{wLabel,hLabel,xLabel,yLabel,bulletWLabel,bulletHLabel,fireTimeMsLabel, bulletDistanceLabel};
                 for (int i = 0; i < attrs.length; i++) {
                     attrs[i].setSize(300, 20);
                     attrs[i].setFont(new Font("고딕체", Font.BOLD, 15));
@@ -495,9 +507,9 @@ public class Block {
                 setSize(500, 570);
                 addImageButton();
             }
-            public void setBlockAttributes(int[] blockSource, String imgFilePath, String shotImgFilePath) {
-                for (int i = 0; i < blockSource.length; i++) {
-                    inputFields[i].setText(String.valueOf(blockSource[i]));
+            public void setBlockAttributes(int[] playerSource, String imgFilePath, String shotImgFilePath) {
+                for (int i = 0; i < playerSource.length; i++) {
+                    inputFields[i].setText(String.valueOf(playerSource[i]));
                 }
                 playerImgFileTextField.setText(imgFilePath);
                 bulletImgFileTextField.setText(shotImgFilePath);
@@ -527,7 +539,7 @@ public class Block {
                 @Override
                 public void actionPerformed(ActionEvent e){
                     JButton button = (JButton)(e.getSource());
-                    chooser = new JFileChooser("./images");
+                    chooser = new JFileChooser("C:\\Users\\서준영\\Desktop\\HSU\\과제\\3-1\\project_java\\mycode\\Editor\\images");
                     FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & PNG & GIF Images"
                             , "jpg", "png", "gif");
                     chooser.setFileFilter(filter);
@@ -568,8 +580,10 @@ public class Block {
                         playerSource[i] = Integer.parseInt(inputFields[i].getText());
                         isSaved=true;
                     }
-                    if(!forChange) {
+                    if(!forChange)
                         arrangeTabPanel.setBlockForPlayer(playerSource, playerImgFilePath, bulletImgFilePath);
+                    if(forChange){
+                        changePlayer(playerSource,playerImgFilePath, bulletImgFilePath);
                     }
                 }
             }
