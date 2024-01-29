@@ -1,98 +1,39 @@
-<?xml version="1.0" encoding="euc-kr" ?> 
 <BlockGame>
-	<Setting>
-		<Screen>
-			<Size w="1024" h="768"></Size>
-		</Screen>
-		<Bg>
-			<BgImg bgImg ="images/sky.jpg"></BgImg>
-			<BgMusic bgMusic="sounds/bird.wav"></BgMusic>
-			<FireSound fireSound="sounds/gun.wav"></FireSound>
-		</Bg>
-		<GameMode>
-			<BlockMode blockMode="limit"></BlockMode>
-			<ShotMode shotMode="manual"></ShotMode>
-			<BlockDirection blockDirection="down"></BlockDirection>
-			<BulletBlockDirection bulletBlockDirection="cross"></BulletBlockDirection>
-		</GameMode>
-	</Setting>
+<Setting>
+<Screen>
+<Size w="1024" h="768"/>
+</Screen>
+<Bg>
+<BgImg bgImg="images/sky.jpg"/>
+<BgMusic bgMusic="sounds/bird.wav"/>
+<FireSound fireSound="sounds/gun.wav"/>
+</Bg>
+<GameMode>
+<BlockMode blockMode="limit"/>
+<ShotMode shotMode="manual"/>
+<BlockDirection blockDirection="down"/>
+<BulletBlockDirection bulletBlockDirection="cross"/>
+</GameMode>
+</Setting>
 <GamePanel>
-	<Player>
-		<BulletBlock blockw="50" blockh="50" blockx="500" blocky="600" bulletw="30" bulleth="50" firetimems="30" bulletimg ="images/bullet.png" bulletdistance="30"
-					 blockimg="images/jet.png"></BulletBlock>
-	</Player>
-	<Stage>
-		<PlusSpeed plusSpeed="10"></PlusSpeed>
-		<StageBlock stageblockx="500" stageblocky="100" stageblockw="300" stageblockh="30" stagecontent="Stage : "
-					stagefontname="고딕체" stagefontstyle="1" stagefontsize="30" stagefontcolor="10"></StageBlock>
-	</Stage>
-	<Score>
-		<Rule rule="10"></Rule>
-		<ScoreBlock scoreblockx="500" scoreblocky="200" scoreblockw="300" scoreblockh="30" scorecontent="Score : "
-					scorefontname="고딕체" scorefontstyle="1" scorefontsize="30" scorefontcolor="10"></ScoreBlock>
-	</Score>
-	<Block>
-		<Obj x="300" y="300" w="100" h="100" randscope="0"  life="1" speed="1" img="images/sparrow1.png" shotimg="images/shot.png"></Obj>
-		<Obj  x="70" y="100" w="50" h="30" randscope="0" life="2" speed="2" img="images/sparrow1.png" shotimg="images/shot.png"/>
-		<Obj  x="130" y="200" w="80" h="80" randscope="0" life="3" speed="1" img="images/sparrow1.png" shotimg="images/shot.png"/>
-		<Obj x="230" y="400" w="50" h="30" randscope="0" life="4" speed="1" img="images/minibird1.png" shotimg="images/shot.png"></Obj>
-		<Obj  x="600" y="300" w="50" h="30" randscope="0" life="5" speed="1" img="images/minibird1.png" shotimg="images/shot.png"/>
-		<Obj  x="800" y="500" w="200" h="200" randscope="0" life="6" speed="1" img="images/minibird1.png" shotimg="images/shot.png"/>
-		<Special x="800" y="500" w="100" h="100" rate="50" randscope="100" life="16" speed="1" img="images/bomb.png" shotimg="images/bombshot.png"></Special>
-
-	</Block>
+<Player>
+<BulletBlock blockw="50" blockh="50" blockx="500" blocky="600" bulletw="30" bulleth="50" firetimems="30" bulletdistance="30" blockimg="images/jet.png" bulletimg="images/bullet.png"/>
+</Player>
+<Stage>
+<PlusSpeed plusSpeed="10"/>
+<StageBlock stageblockx="500" stageblocky="100" stageblockw="300" stageblockh="30" stagecontent="Stage : " stagefontname="怨좊뵓泥�" stagefontstyle="1" stagefontsize="30" stagefontcolor="10"/>
+</Stage>
+<Score>
+<Rule rule="10"/>
+<ScoreBlock scoreblockx="10" scoreblocky="500" scoreblockw="200" scoreblockh="300" scorecontent="Score : " scorefontname="怨좊뵓泥�" scorefontstyle="1" scorefontsize="30" scorefontcolor="10"/>
+</Score>
+<Block>
+<Obj x="300" y="300" w="100" h="100" randscope="0" life="1" speed="1" img="images/sparrow1.png" shotimg="images/shot.png"/>
+<Obj x="70" y="100" w="50" h="30" randscope="0" life="2" speed="2" img="images/sparrow1.png" shotimg="images/shot.png"/>
+<Obj x="130" y="200" w="80" h="80" randscope="0" life="3" speed="1" img="images/sparrow1.png" shotimg="images/shot.png"/>
+<Obj x="230" y="400" w="50" h="30" randscope="0" life="4" speed="1" img="images/minibird1.png" shotimg="images/shot.png"/>
+<Obj x="600" y="300" w="50" h="30" randscope="0" life="5" speed="1" img="images/minibird1.png" shotimg="images/shot.png"/>
+<Obj x="842" y="543" w="200" h="200" randscope="0" life="6" speed="1" img="images/minibird1.png" shotimg="images/shot.png"/>
+</Block>
 </GamePanel>
 </BlockGame>
-		<!-- GameMode  -->
-		<!-- BlockMode : limit, infinite  limit : 현재 블록이 다 잡혀야 새로 생성, infinite : 항상 현재 블록 갯수 유지  -->
-		<!-- ShotMode : auto, manual  auto : 총알 자동발사 manual : 스페이스키로 발사  -->
-		<!-- BlockDirection : cross, down, random, chase  cross: 파괴해야할 블록 좌 에서 우로 down : 파괴해야할 블록이 위에서 아래로 random : 블록이 랜덤하게 움직임 chase : block이 player를 추적-->
-		<!-- BulletBlockDirection : cross,updown, fourway cross: 총알 발사되는 블록 좌우로 updown : 총알 발사되는 블록 위아래로 fourway : 상하좌우 네 방향으로 총알 발사-->
-
-		<!-- Setting  -->
-		<!-- Screen : 화면 크기 설정. 사용자 재설정 불가  -->
-		<!-- Bgimg : 게임 기본 배경화면  -->
-		<!-- BgMusic : 게임 전체 배경음악  -->
-		<!-- FireSound : 총알 발사 소리  -->
-
-		<!-- Score  -->
-		<!-- Rule : 객체 파괴시 올라갈 점수 -->
-		<!-- ScoreBlock : 스코어 표기 칸 생성 x,y는 위치, w,h는 크기 scorecontent는 숫자 앞에 적힐 문장-->
-
-		<!-- Player : 총알이 발사되는 블록에 대한 설정 -->
-		<!-- BulletBlock 태그일 때는 크기, 위치, 이미지와 총알의 크기, 이미지만 설정-->
-		<!-- firems : 총알이 발사되는 속도(연사 속도) -->
-		<!-- distance : 총알이 발사되는 거리 -->
-		<!-- ChaseBulletBlock 태그일 때는 blockDirection이 chase일 때 사용 : 네 방향 이미지 등록 필요 -->
-
-		<!-- Stage  -->
-		<!-- PlusSpeed : 스테이지가 증가할 때 얼마나 빨라질지에 대한 정도  -->
-		<!-- StageBlock : 스테이지를 표기하는 블럭에 대한 속성 Score와 동일  -->
-
-		<!-- Obj 태그의 life는 파괴에 필요한 타격 횟수, speed는 움직이는 속도 -->
-		<!-- x,y에만 "random" 값을 넣을 수 있고, 0~화면최대크기 까지 랜덤한 좌표 x,y에 블록 등장 -->
-		<!-- Special은 특수 기능을 가진 블록, rate는 등장확률 0으로 설정하면 등장안함  -->
-		<!-- randScope는 blockdirection이 랜덤일 때 한번에 움직이는 거리 값 0으로 설정하면 다른 모드에서도 작성해도 에러 안남   -->
-
-
-		<!-- Score, Stage 블록 설정에 대한 폰트와 색상 int 값 -->
-		<!-- Font Styles -->
-		<!-- 0. Plain (기본 스타일) -->
-		<!-- 1. Bold (굵은 스타일) -->
-		<!-- 2. Italic (이탤릭 스타일) -->
-
-		<!-- Colors -->
-		<!-- 0. Black (검은색) -->
-		<!-- 1. Blue (파란색) -->
-		<!-- 2. Cyan (청록색) -->
-		<!-- 3. Dark Gray (진회색) -->
-		<!-- 4. Gray (회색) -->
-		<!-- 5. Green (녹색) -->
-		<!-- 6. Light Gray (밝은 회색) -->
-		<!-- 7. Magenta (자홍색) -->
-		<!-- 8. Orange (주황색) -->
-		<!-- 9. Pink (분홍색) -->
-		<!-- 10. Red (빨간색) -->
-		<!-- 11. White (하얀색) -->
-		<!-- 12. Yellow (노란색) -->
-

@@ -45,6 +45,7 @@ public class ItemPanel extends JPanel {
         itemPanelPane.addTab("속성",propertyPane);
         itemPanelPane.addTab("설정",settingPane);
         this.arrangeTabPanel=arrangePanel.getArrangeTabPanel();
+
     }
 }
     class ItemPane extends JPanel {
@@ -58,7 +59,6 @@ public class ItemPanel extends JPanel {
         int startX = 0; // 시작 x 좌표
         int startY = 10; // 시작 y 좌표
         private ImageIcon mouseNormalBlock;
-        private ImageIcon mousePressedBlock;
         private ImageIcon playerBlock;
         JButton addButton;
         JButton deleteButton;
@@ -74,7 +74,6 @@ public class ItemPanel extends JPanel {
             this.mainAuthorFrame = mainAuthorFrame;
             this.arrangeTabPanel = arrangePanel.getArrangeTabPanel();
             firstSetting();
-            addButtons();
             drawBlocks();
         }
 
@@ -91,20 +90,13 @@ public class ItemPanel extends JPanel {
             return mouseNormalBlock;
         }
 
-        public ImageIcon getMousePressedBlock() {
-            return mousePressedBlock;
-        }
+
 
         public void firstSetting() {
             ImageIcon originalBlock = new ImageIcon("images/block.png");
             Image blockImg = originalBlock.getImage();
             Image scaledBlockImg = blockImg.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
             mouseNormalBlock = new ImageIcon(scaledBlockImg);
-
-            ImageIcon originalBlock2 = new ImageIcon("images/bomb.png");
-            Image blockImg2 = originalBlock2.getImage();
-            Image scaledBlockImg2 = blockImg2.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
-            mousePressedBlock = new ImageIcon(scaledBlockImg2);
 
             ImageIcon playerBlock1 = new ImageIcon("images/jet.png");
             Image playerBlockImg = playerBlock1.getImage();
@@ -132,7 +124,6 @@ public class ItemPanel extends JPanel {
 
         public void drawBlocks() {
             removeAll();
-            addButtons();
             for (int i = 0; i < normalBLocks.size(); i++) {
                 Block b = normalBLocks.get(i);
                 JLabel blockLabel = b.getBlockLabel();
@@ -170,18 +161,7 @@ public class ItemPanel extends JPanel {
             }
         }
 
-        public void addButtons() {
-            addButton = new JButton("배경 설정");
-            deleteButton = new JButton("삭제");
-            addButton.setSize(100, 30);
-            deleteButton.setSize(100, 30);
-            addButton.setLocation(70, 900);
-            deleteButton.setLocation(230, 900);
-            add(addButton);
-            add(deleteButton);
-            addButton.addMouseListener(new ButtonActionListener());
-            deleteButton.addMouseListener(new ButtonActionListener());
-        }
+
 
         public String getInput() {
             String result = "";
@@ -341,9 +321,7 @@ public class ItemPanel extends JPanel {
                 button.setLocation(100,900);
                 add(button);
                 button.addActionListener(new SettingButtonActionListener());
-
             }
-
             public void setBgImgFilePath(String bgImgFilePath) {
                 this.bgImgFilePath = bgImgFilePath;
                 itemPanel.setBgImgFilePath(bgImgFilePath);
@@ -506,6 +484,8 @@ public class ItemPanel extends JPanel {
                     add(plusSpeedLabel);
                     add(ruleInput);
                     add(speedInput);
+                    setLocationRelativeTo(null);
+
                 }
                 class ComboBoxActionListener implements ActionListener{
                     @Override
@@ -549,7 +529,20 @@ public class ItemPanel extends JPanel {
                         mainAuthorFrame.settings.add(scoreFontColor);
                         mainAuthorFrame.settings.add(scoreRule);
                         mainAuthorFrame.settings.add(plusSpeed);
-
+                        //                                scoreX=scoreFields[0].getText();
+                        //                                scoreY=scoreFields[1].getText();
+                        //                                scoreW=scoreFields[2].getText();
+                        //                                scoreH=scoreFields[3].getText();
+                        //                                scoreContent=scoreFields[4].getText();
+                        //                                scoreFontSize=scoreFields[5].getText();
+                        wInput.setText(screenW);
+                        hInput.setText(screenH);
+                        scoreFields[0].setText(scoreX);
+                        scoreFields[1].setText(scoreY);
+                        scoreFields[2].setText(scoreW);
+                        scoreFields[3].setText(scoreH);
+                        scoreFields[4].setText(scoreContent);
+                        scoreFields[5].setText(scoreFontSize);
                         for(int i=0;i<mainAuthorFrame.settings.size();i++){
                             System.out.println(mainAuthorFrame.settings.get(i));
                         }
@@ -604,6 +597,7 @@ public class ItemPanel extends JPanel {
                     private JComboBox fontColorCombo = new JComboBox(scoreFontColors);
                     private JButton scoreDialogBtn=new JButton("저장");
                     public scoreDialog(){
+                        setModal(true);
                         setLayout(null);
                         setSize(500,1000);
                         setResizable(false);
@@ -661,6 +655,8 @@ public class ItemPanel extends JPanel {
                             }
                         });
                         add(scoreDialogBtn);
+                        setLocationRelativeTo(null);
+
                     }
                 }
             }

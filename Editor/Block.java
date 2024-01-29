@@ -1,11 +1,10 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.Vector;
+
+import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Block {
     private Vector<Block> normalBlocks;
@@ -21,7 +20,6 @@ public class Block {
     private ImageIcon mouseNormalBlock;
     private ImageIcon mouseNormalPlayerBlock;
     private ItemPane itemPane;
-    private ImageIcon mousePressedBlock;
     private boolean isSaved = false;
     private ArrangeTabPanel arrangeTabPanel;
     //속성팬에 보일 이미지
@@ -32,7 +30,7 @@ public class Block {
     private int [] blockSource; //x,y,w,h,randscope,life,speed
     private int [] defaultBlockSource = {100,100,100,100,10,10,10};
     private String defaultImg = "C:\\Users\\서준영\\Desktop\\HSU\\과제\\3-1\\project_java\\mycode\\Editor\\images\\block.png";
-    private String defaultPlayerImg = "C:\\Users\\서준영\\Desktop\\HSU\\과제\\3-1\\project_java\\mycode\\Editor\\images\\enemy2.png";
+    private String defaultPlayerImg = "C:\\Users\\서준영\\Desktop\\HSU\\과제\\3-1\\project_java\\mycode\\Editor\\images\\jet.png";
     private int [] playerSource; //w,h,x,y,Bw,Bh,fms,Bd
     private int [] defaultPlayerSource = {100,100,500,500,20,50,10,10};
     private MainAuthorFrame mainAuthorFrame;
@@ -41,12 +39,13 @@ public class Block {
     private String shotImgFilePath;
     private String playerImgFilePath;
     private String bulletImgFilePath;
+    private ImageIcon icon,shotIcon;
     private boolean isPlayer;
     //일단 생성됐다면, 속성 변경 다이얼로그를 띄운다
     //처음 아이템팬에서 누르는 경우에는 false일 것.
     private boolean forChange=true;
+    private JLabel handlerLabel;
 
-    private ImageIcon handler;
     //ItemPane 표기용 블록 생성자
     public Block(int blockX, int blockY, ItemPane itemPane,boolean isPlayer) {
         this.blockX = blockX;
@@ -54,7 +53,6 @@ public class Block {
         this.itemPane=itemPane;
         this.isPlayer=isPlayer;
         this.arrangeTabPanel=itemPane.getArrangeTabPanel();
-        this.mousePressedBlock = itemPane.getMousePressedBlock();
         this.forChange=false;
         normalBlocks=itemPane.getNormalBLocks();
         this.mouseNormalBlock=itemPane.getMouseNormalBlock();
@@ -69,7 +67,7 @@ public class Block {
             blockLabel.setIcon(mouseNormalPlayerBlock);
         }
         blockLabel.setSize(80, 80);
-        BlockActionListener blc = new BlockActionListener();
+        BlockMouseListener blc = new BlockMouseListener();
         blockLabel.addMouseListener(blc);
     }
     //arrangeTabPanel에서 호출돼서 모든 속성을 가지는 블록
@@ -77,6 +75,7 @@ public class Block {
                  String imgFilePath, String shotImgFilePath,
                  MainAuthorFrame mainAuthorFrame, PropertyPane propertyPane){
         isPlayer=false;
+
         this.x=x;this.y=y;this.w=w;this.h=h; this.randscope=randscope;this.life=life;
         this.speed=speed; this.imgFilePath=imgFilePath;this.shotImgFilePath=shotImgFilePath;
         this.mainAuthorFrame=mainAuthorFrame; this.propertyPane=propertyPane;
@@ -90,13 +89,15 @@ public class Block {
 
         blockLabel.setSize(w,h);
         blockLabel.setLocation(x,y);
-        BlockActionListener blc = new BlockActionListener();
+        BlockMouseListener blc = new BlockMouseListener();
         blc.isItemPane=false;
         blockLabel.addMouseListener(blc);
         blockLabel.addMouseMotionListener(blc);
+        blockLabel.addMouseWheelListener(blc);
         mainAuthorFrame.arrangeBlocks.add(this);
-        makeHandler();
+
     }
+
     //플레이어용 블록
     public Block(int playerW, int playerH, int playerX, int playerY, int bulletW, int bulletH, int fireTimeMs,
                  int bulletDistance, String playerImgFilePath, String bulletImgFilePath,
@@ -115,13 +116,23 @@ public class Block {
 
         blockLabel.setSize(playerW,playerH);
         blockLabel.setLocation(playerX,playerY);
-        BlockActionListener blc = new BlockActionListener();
+        BlockMouseListener blc = new BlockMouseListener();
         blc.isItemPane=false;
         blockLabel.addMouseListener(blc);
         blockLabel.addMouseMotionListener(blc);
+        blockLabel.addMouseWheelListener(blc);
         mainAuthorFrame.playerBlocks.add(this);
-        makeHandler();
     }
+    public void selectBlock(Block block) {
+        if (block.isChoosed) {
+            block.getBlockLabel().setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+            arrangeTabPanel.repaint();
+        }
+        else {
+            block.getBlockLabel().setBorder(null);
+        }
+    }
+
     public void changeBlock(int [] blockSource,String imgFilePath,String shotImgFilePath){
        this.x = blockSource[0]; this.y = blockSource[1]; this.w= blockSource[2]; this.h =blockSource[3];
         this.randscope = blockSource[4]; this.life = blockSource[5]; this.speed = blockSource[6];
@@ -145,9 +156,7 @@ public class Block {
         blockLabel.setIcon(userNewPlayerBlock);
         arrangeTabPanel.repaint();
     }
-    public void makeHandler(){
-        this.handler =makeImage(new ImageIcon("./images/handler.png"),10,10);
-    }
+
     public void setPointForBlock(Point p){
         this.x=p.x; this.y=p.y;
     }
@@ -230,19 +239,57 @@ public class Block {
     }
     public Block getBlock(){return this;}
 
-    class BlockActionListener extends MouseAdapter {
+    class BlockMouseListener extends MouseAdapter {
         BlockDialogForBlock blockDialogForBlock =new BlockDialogForBlock();
         BlockDialogForPlayer blockDialogForPlayer = new BlockDialogForPlayer();
         private Point initialClick; // 드래그 시작 위치
         private boolean isItemPane = true;
         @Override
+        public void mouseWheelMoved(MouseWheelEvent e){
+            int wheelMove = e.getWheelRotation();
+            if(wheelMove<0 && isChoosed){ //up
+                int newWidth = blockLabel.getWidth()+10;
+                int newHeight = blockLabel.getHeight()+10;
+                blockLabel.setSize(newWidth,newHeight);
+                if(!isPlayer){
+                    userNewBlock = makeImage(userNewBlock,newWidth,newHeight);
+                    blockLabel.setIcon(userNewBlock);
+                }
+                else{
+                    userNewPlayerBlock = makeImage(userNewPlayerBlock,newWidth,newHeight);
+                    blockLabel.setIcon(userNewPlayerBlock);
+                }
+            }
+            if(wheelMove>0 && isChoosed){//down
+                int newWidth = blockLabel.getWidth()-10;
+                int newHeight = blockLabel.getHeight()-10;
+                blockLabel.setSize(newWidth,newHeight);
+                blockLabel.setSize(newWidth,newHeight);
+                if(!isPlayer){
+                    userNewBlock = makeImage(userNewBlock,newWidth,newHeight);
+                    blockLabel.setIcon(userNewBlock);
+                }
+                else{
+                    userNewPlayerBlock = makeImage(userNewPlayerBlock,newWidth,newHeight);
+                    blockLabel.setIcon(userNewPlayerBlock);
+                }
+            }
+            arrangeTabPanel.repaint();
+        }
+        @Override
         public void mouseClicked(MouseEvent e) {
-            if(isItemPane) {
-                if(e.getButton()==MouseEvent.BUTTON3 &&!isPlayer){
+            if(isItemPane) {//오른쪽 아이템 팬의 블록
+                if(e.getButton()==MouseEvent.BUTTON3 &&!isPlayer && !isSaved){
                     arrangeTabPanel.setBlockForBlock(defaultBlockSource,defaultImg,defaultImg);
                 }
-                if(e.getButton()==MouseEvent.BUTTON3 && isPlayer){
+                if(e.getButton()==MouseEvent.BUTTON3 && isPlayer&& !isSaved){
                     arrangeTabPanel.setBlockForPlayer(defaultPlayerSource,defaultPlayerImg,defaultPlayerImg);
+                }
+                if(e.getButton()==MouseEvent.BUTTON3 && !isPlayer && isSaved){
+                    arrangeTabPanel.setBlockForBlock(blockSource,imgFilePath,shotImgFilePath);
+                }
+                if(e.getButton()==MouseEvent.BUTTON3&&isPlayer &&isSaved){
+                    arrangeTabPanel.setBlockForPlayer(playerSource,playerImgFilePath,bulletImgFilePath);
                 }
                 if (e.getClickCount() == 2 && !isSaved && !isPlayer) {
                     JLabel block = (JLabel) e.getSource();
@@ -319,9 +366,25 @@ public class Block {
             }
             if (b != null) {
                 b.isChoosed = true;
-                block.setIcon(mousePressedBlock);
                 itemPane.repaint();
             }
+            }
+            if(!isItemPane){
+                JLabel block = (JLabel) e.getSource();
+                Block b = findBlockInArrangePane(block);
+                for(int i=0;i<mainAuthorFrame.arrangeBlocks.size();i++){
+                    mainAuthorFrame.arrangeBlocks.get(i).isChoosed=false;
+                    selectBlock(mainAuthorFrame.arrangeBlocks.get(i));
+                }
+                for(int i=0;i<mainAuthorFrame.playerBlocks.size();i++){
+                    mainAuthorFrame.playerBlocks.get(i).isChoosed=false;
+                    selectBlock(mainAuthorFrame.playerBlocks.get(i));
+                }
+                if(b!=null){
+                    b.isChoosed=true;
+                    selectBlock(b);
+                    arrangeTabPanel.repaint();
+                }
             }
         }
 }
@@ -337,12 +400,13 @@ public class Block {
             private JLabel shotimg = new JLabel("소멸 시 이미지 : ");
             private JButton ok = new JButton("저장");
             private JLabel[] attrs;
-            private JTextField[] inputFields = new JTextField[9];
+            private JTextField[] inputFields = new JTextField[7];
             private JFileChooser chooser;
             private JTextField imgFileTextField;
             private JTextField shotImgFileTextField;
 
             public BlockDialogForBlock() {
+                setModal(true);
                 setLayout(null);
                 setResizable(false);
                 attrs = new JLabel[]{x, y, w, h, randscope, life, speed};
@@ -374,6 +438,21 @@ public class Block {
                 add(imgFileTextField); add(shotImgFileTextField);
                 setSize(500, 500);
                 addImageButton();
+                setLocationRelativeTo(null);
+
+            }
+            private boolean checkNull(){
+                for(int i=0; i<inputFields.length;i++){
+                    if(inputFields[i].getText().equals("")){
+                        showMessageDialog(this, "입력되지 않은 값이 있습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+                        return true;
+                    }
+                }
+                if(shotImgFilePath==null||imgFilePath==null ){
+                    showMessageDialog(this, "image를 설정하세요.", "오류", JOptionPane.ERROR_MESSAGE);
+                    return true;
+                }
+                return false;
             }
             private void addImageButton(){
                 JButton imgButton = new JButton("기본 이미지 추가");
@@ -399,10 +478,13 @@ public class Block {
             class okButtonActionListener implements ActionListener{
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    setVisible(false);
-                    for(int i=0;i<blockSource.length;i++){
-                        blockSource[i] = Integer.parseInt(inputFields[i].getText());
-                        isSaved=true;
+                    if(!checkNull()) {
+                        setVisible(false);
+                        for (int i = 0; i < blockSource.length; i++) {
+                            //팔레트에 블록 속성을 저장한 경우
+                            blockSource[i] = Integer.parseInt(inputFields[i].getText());
+                        }
+                        isSaved = true;
                     }
                 }
             }
@@ -437,6 +519,7 @@ public class Block {
             class arrangeButtonActionListener implements ActionListener{
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    setVisible(false);
                     for(int i=0;i<blockSource.length;i++){
                         blockSource[i] = Integer.parseInt(inputFields[i].getText());
                         isSaved=true;
@@ -469,12 +552,13 @@ public class Block {
             private JLabel playerBlockImgLabel = new JLabel("플레이어 이미지 : ");
             private JButton ok = new JButton("저장");
             private JLabel[] attrs;
-            private JTextField[] inputFields = new JTextField[10];
+            private JTextField[] inputFields = new JTextField[8];
             private JFileChooser chooser;
 
             private JTextField playerImgFileTextField;
             private JTextField bulletImgFileTextField;
             public BlockDialogForPlayer(){
+                setModal(true);
                 setLayout(null);
                 setResizable(false);
                 attrs = new JLabel[]{wLabel,hLabel,xLabel,yLabel,bulletWLabel,bulletHLabel,fireTimeMsLabel, bulletDistanceLabel};
@@ -506,6 +590,21 @@ public class Block {
                 add(playerImgFileTextField); add(bulletImgFileTextField);
                 setSize(500, 570);
                 addImageButton();
+                setLocationRelativeTo(null);
+
+            }
+            private boolean checkNull(){
+                for(int i=0; i<inputFields.length;i++){
+                    if(inputFields[i].getText().equals("")){
+                        showMessageDialog(this, "입력되지 않은 값이 있습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+                        return true;
+                    }
+                }
+                if(bulletImgFilePath==null||playerImgFilePath==null ){
+                    showMessageDialog(this, "image를 설정하세요.", "오류", JOptionPane.ERROR_MESSAGE);
+                    return true;
+                }
+                return false;
             }
             public void setBlockAttributes(int[] playerSource, String imgFilePath, String shotImgFilePath) {
                 for (int i = 0; i < playerSource.length; i++) {
@@ -566,16 +665,19 @@ public class Block {
             class okButtonActionListener implements ActionListener{
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    setVisible(false);
-                    for(int i=0;i<playerSource.length;i++){
-                        playerSource[i] = Integer.parseInt(inputFields[i].getText());
-                        isSaved=true;
+                    if (!checkNull()) {
+                        setVisible(false);
+                        for (int i = 0; i < playerSource.length; i++) {
+                            playerSource[i] = Integer.parseInt(inputFields[i].getText());
+                        }
+                        isSaved = true;
                     }
                 }
             }
             class arrangeButtonActionListener implements ActionListener{
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    setVisible(false);
                     for(int i=0;i<playerSource.length;i++){
                         playerSource[i] = Integer.parseInt(inputFields[i].getText());
                         isSaved=true;
