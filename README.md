@@ -11,6 +11,7 @@
 ## 에뮬레이터
 ### 프로그램 구조
 ![서준영_보고서_2024_2월_xml보고서](https://github.com/Jun-Young-Seo/JAVA_SwingGUI_XML_Game_Emulator_And_Editor/assets/128452954/219b89ef-49e7-4fd4-94a9-344fe92aee94)
+
 ### 사용법 및 설명
 XMLReader 클래스는 xmlFile의 파싱 결과를 바탕으로 필요한 Images, Sounds 파일을 로딩해 BlockGameFrame에 전달한다. BlockGameFrame은 xmlFile의 파싱 결과를 바탕으로 게임 오브젝트인 Block, 플레이어 
 오브젝트인 BulletBlock을 동적으로 생성해 게임을 실행하게 된다. BlockGameMenuBar 클래스는 xmlFile을 사용자가 선택할 수 있도록 하는 인터페이스를 제공한다.
@@ -60,7 +61,6 @@ ArrangePanel의 XML 탭을 클릭한 화면이다. 현재 작업 중인 Editor �
 
 ![image](https://github.com/Jun-Young-Seo/JAVA_SwingGUI_XML_Game_Emulator_And_Editor/assets/128452954/1f51a2b0-e628-44db-8051-df6101c7d9b4)
 이 에디터로 제작한 간단한 xml 파일을 안드로이드 기반 환경에서 작동한 모습
-다양한 기능은 추가하지 못했지만 다음 학기 Android Programming 과목 수강 후 추가 수정 예정
 
 
 
