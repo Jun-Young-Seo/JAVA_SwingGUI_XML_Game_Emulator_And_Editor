@@ -4,8 +4,8 @@
 ## XML을 만드는 에디터
 
 ### 개발기간 : 2024 01월 ~ 2024 02월 (약 2개월) => xml Parser 1주일, 에뮬레이터 2주일, Editor 4주일, Android 공부 1주일
-### 사용 언어 : Java
-
+### 사용 언어 : Java, XML, kotlin(Android)
+### 사용 라이브러리 : Java Swing(GUI)
 
 
 ## 에뮬레이터
